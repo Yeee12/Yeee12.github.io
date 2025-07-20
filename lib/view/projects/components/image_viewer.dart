@@ -1,32 +1,47 @@
-import 'package:photo_view/photo_view.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ImageViewer {
   ImageViewer(BuildContext context, String image) {
     showGeneralDialog(
-      barrierColor: Colors.black,
-      transitionDuration: Duration(milliseconds: 500),
+      barrierColor: Colors.white38,
+      transitionDuration: const Duration(milliseconds: 500),
       barrierDismissible: true,
       barrierLabel: 'Barrier',
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) {
-        return Center(
-          child: Hero(
-            tag: 'IMAGEVIEW',
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Scaffold(
-                backgroundColor: Colors.black,
-                body: Container(
-                    color: Colors.white,
-                    child: Center(
-                      child: PhotoView(imageProvider: AssetImage(image))
-                      ),
-                    )),
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Stack(
+            children: [
+              Center(
+                child: Hero(
+                  tag: 'IMAGEVIEW',
+                  child: PhotoView(
+                    imageProvider: AssetImage(image),
+                    backgroundDecoration: const BoxDecoration(color: Colors.white),
+                  ),
+                ),
               ),
-            ),
 
+
+              Positioned(
+                top: 40,
+                left: 20,
+                child: SafeArea(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.black.withOpacity(0.5),
+                    child: IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

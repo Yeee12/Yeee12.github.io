@@ -17,7 +17,7 @@ class ProjectLinks extends StatelessWidget {
             IconButton(onPressed: () {launchUrl(Uri.parse(projectList[index].link));}, icon: SvgPicture.asset('assets/icons/github.svg')),
           ],
         ),
-        const Spacer(),
+        SizedBox(height: 3,),
         TextButton(
             onPressed: () {
               launchUrl(Uri.parse(projectList[index].link));
