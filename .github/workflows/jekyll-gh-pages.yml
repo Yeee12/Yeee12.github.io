@@ -1,9 +1,9 @@
-name: Deploy static site to GitHub Pages
+name: Deploy Flutter Web to GitHub Pages
 
 on:
   push:
     branches:
-      - master # or main
+      - master
   workflow_dispatch:
 
 permissions:
@@ -12,19 +12,29 @@ permissions:
   id-token: write
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node (for GitHub Pages support)
-        uses: actions/setup-node@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          node-version: 18
+          flutter-version: '3.19.6'  # or your version
 
-      - name: Upload static site to GitHub Pages
+      - name: Enable Flutter Web
+        run: flutter config --enable-web
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web # <- use your Flutter Web build output folder
+          publish_dir: ./build/web
