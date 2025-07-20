@@ -3,26 +3,26 @@ name: Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches:
-      - master
+      - master  # or 'main' if your default branch is main
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'  # or your version
+          flutter-version: '3.19.6'  # Replace with your Flutter version
 
       - name: Enable Flutter Web
         run: flutter config --enable-web
@@ -30,8 +30,13 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build Flutter Web
-        run: flutter build web --release
+      - name: Build Flutter Web (with correct base-href)
+        run: flutter build web --release --base-href="/"
+
+      - name: Setup Node (needed for peaceiris/actions-gh-pages)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
